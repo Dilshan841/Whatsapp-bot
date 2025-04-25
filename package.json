@@ -1,26 +1,30 @@
 {
-  "name": "dilshan-md",
+  "name": "DILSHAN-MD",
   "version": "1.0.0",
-  "description": "A WhatsApp bot created using Node.js",
+  "description": "A multi-functional WhatsApp bot created by Dilshan",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name dilshan-md bot",
-    "stop": "pm2 stop dilshan-md bot",
-    "restart": "pm2 restart dilshan-md bot"
+    "start": "pm2 start index.js --name DILSHAN-MD",
+    "stop": "pm2 stop DILSHAN-MD",
+    "restart": "pm2 restart DILSHAN-MD"
   },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "DILSHAN-MD"
+  ],
+  "author": "Dilshan Ashinsa",
+  "license": "MIT",
   "dependencies": {
-    "@whiskeysockets/baileys": "6.6.0",
-    "@adiwajshing/keyed-db": "^0.2.4",
-    "pino": "^7.0.5",
-    "pm2": "^5.2.0",
-    "util": "^0.12.4",
-    "express": "latest",
-    "axios": "^1.2.5",
-    "file_size_url": "^1.0.4",
-    "fs-extra": "^11.1.0",
+    "@whiskeysockets/baileys": "^6.7.9",
+    "awesome-phonenumber": "^7.4.0",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "megajs": "^1.3.7",
     "path": "^0.12.7",
-    "node-fetch": "^2.6.1",
-    "megajs": "^1.1.0",
-    "vm": "^0.1.0",
-    "qrcode-terminal": "^0.12.0"
+    "pino": "^9.6.0",
+    "pm2": "^6.0.5",
+    "qrcode": "^1.5.4",
+    "rimraf": "^6.0.1"
   }
+}
