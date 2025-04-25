@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A WhatsApp bot created using Node.js",
   "main": "index.js",
-  "scripts": {
+  "scripts": {/}
     "start": "pm2 start index.js --deep-monitoring --attach --name dilshan-md bot",
     "stop": "pm2 stop dilshan-md bot",
     "restart": "pm2 restart dilshan-md bot"
