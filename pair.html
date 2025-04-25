@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DILSHAN-MD - WhatsApp Bot QR</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #101010;
+      color: #fff;
+      text-align: center;
+      margin-top: 50px;
+    }
+    img {
+      border: 5px solid #fff;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    h1 {
+      color: #00ff99;
+    }
+  </style>
+</head>
+<body>
+  <h1>Scan the QR Code to Link Your WhatsApp</h1>
+  <p>If QR doesn't show, reload the page in few seconds.</p>
+  <div id="qrcode">Loading QR code...</div>
+
+  <script>
+    fetch('/paircode')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('qrcode').innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('qrcode').innerText = 'Failed to load QR Code. Try again later.';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
