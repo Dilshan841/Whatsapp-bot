@@ -1,14 +1,7 @@
-{
-  "name": "DILSHAN-MD",
-  "version": "1.0.0",
-  "description": "A multi-functional WhatsApp bot created by Dilshan",
-  "main": "index.js",
+  "json"
   "scripts": {
-    "start": "pm2 start index.js --name DILSHAN-MD",
-    "stop": "pm2 stop DILSHAN-MD",
-    "restart": "pm2 restart DILSHAN-MD"
+    "start": "node index.js",
   },
-  "keywords": [
     "whatsapp",
     "bot",
     "DILSHAN-MD"
