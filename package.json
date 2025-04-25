@@ -1,0 +1,16 @@
+{
+  "name": "DILSHAN-MD",
+  "version": "0.0.1",
+  "description": "A multi-functional WhatsApp bot.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.9",
+    "qrcode": "^1.5.4",
+    "express": "^4.18.2",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
