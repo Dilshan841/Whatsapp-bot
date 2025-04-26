@@ -1,64 +1,33 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
-const { Boom } = require('@hapi/boom');
 const express = require('express');
-const qrcode = require('qrcode');
-const fs = require('fs');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-let pairCode = null;
-
-async function startBot() {
-  const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
-  const sock = makeWASocket({
-    auth: state,
-    printQRInTerminal: true,
-  });
-
-  sock.ev.on('connection.update', (update) => {
-    const { connection, lastDisconnect, qr } = update;
-    if (qr) {
-      qrcode.toDataURL(qr, (err, url) => {
-        if (err) {
-          console.error('QR Code generation error:', err);
-        } else {
-          pairCode = url;
-        }
-      });
-    }
-    if (connection === 'close') {
-      const shouldReconnect =
-        (lastDisconnect.error instanceof Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
-      console.log('connection closed due to ', lastDisconnect.error, ', reconnecting ', shouldReconnect);
-      if (shouldReconnect) {
-        startBot();
-    }
-    } else if (connection === 'open') {
-      console.log('opened connection');
-    }
-  });
-
-  sock.ev.on('creds.update', saveCreds);
-
-  sock.ev.on('messages.upsert', async (m) => {
-    const msg = m.messages[0];
-    if (!msg.key.fromMe && msg.message) {
-      const sender = msg.key.remoteJid;
-      await sock.sendMessage(sender, { text: 'Hello! This is DILSHAN-MD bot.' });
-    }
-  });
-}
-
-app.get('/paircode', (req, res) => {
-  if (pairCode) {
-    res.send(`<img src="pairCode" alt="QR Code"/>`);
-   if
-    javascript
-console.log('Pair code not available yet. Please wait...');
-  );
-
-app.listen(PORT, () => 
-  console.log(`DILSHAN-MD bot server running at http://localhost:{PORT}`);
-  startBot();
+// Pair code page serve කරන්න
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pair.html'));
 });
+
+// Express server start
+app.listen(PORT, () => {
+    console.log(`Server started on http://localhost:${PORT}`);
+});
+
+// WhatsApp Connection
+async function startBot() {
+    const { state, saveCreds } = await useMultiFileAuthState('session');
+
+    const sock = makeWASocket({
+        auth: state,
+        printQRInTerminal: true,
+    });
+
+    sock.ev.on('connection.update', (update) => {
+        const { connection, lastDisconnect, qr } = update;
+        if (qr) {
+            console.log('QR Code received. Scan it in your WhatsApp!');
+        }
+        if (connection === 'close') {
+            const reason = new Boom(lastDisconnect.error).output.statusCode;
+            if (reason === DisconnectReason.loggedOut) {
