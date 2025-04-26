@@ -54,7 +54,8 @@ app.get('/paircode', (req, res) => {
   if (pairCode) {
     res.send(`<img src="pairCode" alt="QR Code"/>`);
    if
-    res.send('Pair code not available yet. Please wait...');
+    javascript
+console.log('Pair code not available yet. Please wait...');
   );
 
 app.listen(PORT, () => 
