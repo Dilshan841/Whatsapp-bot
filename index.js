@@ -53,7 +53,7 @@ async function startBot() {
 app.get('/paircode', (req, res) => {
   if (pairCode) {
     res.send(`<img src="pairCode" alt="QR Code"/>`);
-   else 
+   if
     res.send('Pair code not available yet. Please wait...');
   );
 
