@@ -1,33 +1,43 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
+const { makeWASocket, useMultiFileAuthState, makeInMemoryStore } = require('@whiskeysockets/baileys');
 const express = require('express');
-const path = require('path');
+const qrcode = require('qrcode-terminal');
+const { BOT_NAME, OWNER_NAME, OWNER_NUMBER, SESSION_ID } = require('./config');
+const { state, saveState } = useMultiFileAuthState('auth');
+
+// Express server to interact with the user (for Pair Code)
 const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(express.json());
 
-// Pair code page serve කරන්න
+const store = makeInMemoryStore();
+
+const sock = makeWASocket({
+  printQRInTerminal: true,
+  auth: state,
+});
+
+// Event listeners for Baileys API
+sock.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect, qr } = update;
+  if (connection === 'open') {
+    console.log(`Successfully connected to WhatsApp!`);
+  } else if (connection === 'close') {
+    console.log('Connection closed, reconnecting...');
+    const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== 401;
+    if (shouldReconnect) {
+      sock.connect();
+    }
+  } else if (qr) {
+    qrcode.generate(qr, { small: true });
+  }
+});
+
+// Web server to serve Pair Code
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pair.html'));
+  res.send('Pair your WhatsApp bot by scanning the QR code shown in the terminal.');
 });
 
-// Express server start
-app.listen(PORT, () => {
-    console.log(`Server started on http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
 
-// WhatsApp Connection
-async function startBot() {
-    const { state, saveCreds } = await useMultiFileAuthState('session');
-
-    const sock = makeWASocket({
-        auth: state,
-        printQRInTerminal: true,
-    });
-
-    sock.ev.on('connection.update', (update) => {
-        const { connection, lastDisconnect, qr } = update;
-        if (qr) {
-            console.log('QR Code received. Scan it in your WhatsApp!');
-        }
-        if (connection === 'close') {
-            const reason = new Boom(lastDisconnect.error).output.statusCode;
-            if (reason === DisconnectReason.loggedOut) {
+sock.ev.on('creds.update', saveState);
