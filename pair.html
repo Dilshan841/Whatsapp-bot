@@ -2,12 +2,40 @@ html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Bot Pair</title>
+  <meta charset="UTF-8">
+  <title>Whatsapp Pair Code</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #333;
+    }
+    #paircode {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #007bff;
+    }
+  </style>
 </head>
 <body>
-    <h1>Scan the QR Code to pair your WhatsApp bot</h1>
-    <p>Please use your WhatsApp app to scan the QR code shown in the terminal.</p>
+  <h1>Whatsapp Bot Pair Code</h1>
+  <div id="paircode">Pair code will appear here</div>
+
+  <script>
+    // Pair code update system
+    setInterval(async () => {
+      try {
+        const response = await fetch('/paircode');
+        const code = await response.text();
+        document.getElementById('paircode').innerText = code;
+      } catch (err) {
+        console.error('Error fetching pair code:', err);
+      }
+    }, 3000);
+  </script>
 </body>
 </html>
