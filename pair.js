@@ -1,30 +1,21 @@
-const qrcode = require('qrcode');
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
-const router = express.Router();
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-let qrImage = null;
+const pairFilePath = path.join(__dirname, 'pair.html');
 
-/**
- * This function sets the latest QR code.
- * It's used inside the main bot code when QR is generated.
- */
-function updateQR(qr) {
-  qrcode.toDataURL(qr, (err, url) => {
-    if (!err) {
-      qrImage = url;
-    }
-  });
-}
-
-/**
- * Route to get the latest QR code.
- */
-router.get('/paircode', (req, res) => {
-  if (qrImage) {
-    res.send(`<img src="${qrImage}" alt="QR Code" />`);
-  } else {
-    res.send('QR code not generated yet. Please refresh in a moment.');
-  }
+app.get('/', (req, res) => {
+    fs.readFile(pairFilePath, 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).send('Error loading Pair page.');
+        } else {
+            res.send(data);
+        }
+    });
 });
 
-module.exports = { router, updateQR };
+app.listen(PORT, () => {
+    console.log(`Pair server running at http://localhost:${PORT}`);
+});
